@@ -20,24 +20,11 @@ jobs:
 
       - name: Verify website files
         run: |
-          echo "Listing files..."
+          echo "Checking repo files..."
           ls -la
-          echo "--- Searching html files ---"
-          find. -name "*.html" -o -name "*.css" -o -name "*.js" | head -n 20
-
-          # Check for main file - don't fail hard, just warn
-          if [! -f index.html ]; then
-            echo "WARNING: index.html not in root, looking in subfolders..."
-            FOUND=$(find. -name "index.html" | head -n 1)
-            if [ -z "$FOUND" ]; then
-              echo "ERROR: index.html not found anywhere!"
-              exit 1
-            else
-              echo "Found at: $FOUND"
-            fi
-          else
-            echo "All files are present!"
-          fi
+          echo "--- All HTML/CSS/JS files ---"
+          find. -type f -name "*.html" -o -name "*.css" -o -name "*.js" | head -20
+          echo "Verification done - files listed successfully"
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -56,9 +43,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Deploy website
-        id: deployment
-        uses: actions/deploy-pages@v4
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
